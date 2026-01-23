@@ -10,6 +10,7 @@ import { AppointmentDialog } from '@/components/AppointmentDialog'
 import { CallHistory } from '@/components/CallHistory'
 import { AppointmentList } from '@/components/AppointmentList'
 import { VoiceInputGuide } from '@/components/VoiceInputGuide'
+import { CallTranscript } from '@/components/CallTranscript'
 import { Phone, Calendar, ClockCounterClockwise, ChartLine } from '@phosphor-icons/react'
 import { toast } from 'sonner'
 import { motion } from 'framer-motion'
@@ -339,21 +340,31 @@ Return a JSON object with:
           </TabsList>
 
           <TabsContent value="voice" className="space-y-6">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.98 }}
-              animate={{ opacity: 1, scale: 1 }}
-            >
-              <CallLincInterface
-                call={activeCall}
-                onSendMessage={sendMessage}
-                onEndCall={endCall}
-                isSpeaking={isSpeaking}
-                voiceOutputEnabled={voiceOutputEnabled}
-                onToggleVoiceOutput={() => setVoiceOutputEnabled((prev) => !prev)}
-                isVoiceActive={isVoiceActive}
-                audioLevel={audioLevel}
-              />
-            </motion.div>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <motion.div
+                initial={{ opacity: 0, scale: 0.98 }}
+                animate={{ opacity: 1, scale: 1 }}
+              >
+                <CallLincInterface
+                  call={activeCall}
+                  onSendMessage={sendMessage}
+                  onEndCall={endCall}
+                  isSpeaking={isSpeaking}
+                  voiceOutputEnabled={voiceOutputEnabled}
+                  onToggleVoiceOutput={() => setVoiceOutputEnabled((prev) => !prev)}
+                  isVoiceActive={isVoiceActive}
+                  audioLevel={audioLevel}
+                />
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, scale: 0.98 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.1 }}
+              >
+                <CallTranscript call={activeCall} />
+              </motion.div>
+            </div>
           </TabsContent>
 
           <TabsContent value="dashboard" className="space-y-6">
@@ -438,23 +449,33 @@ Return a JSON object with:
 
           <TabsContent value="call">
             {activeCall && (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.98 }}
-                animate={{ opacity: 1, scale: 1 }}
-              >
-                <CallInterface
-                  call={activeCall}
-                  onSendMessage={sendMessage}
-                  onRouteCall={routeCall}
-                  onEndCall={endCall}
-                  onBookAppointment={() => setShowAppointmentDialog(true)}
-                  isSpeaking={isSpeaking}
-                  voiceOutputEnabled={voiceOutputEnabled}
-                  onToggleVoiceOutput={() => setVoiceOutputEnabled((prev) => !prev)}
-                  isVoiceActive={isVoiceActive}
-                  audioLevel={audioLevel}
-                />
-              </motion.div>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.98 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                >
+                  <CallInterface
+                    call={activeCall}
+                    onSendMessage={sendMessage}
+                    onRouteCall={routeCall}
+                    onEndCall={endCall}
+                    onBookAppointment={() => setShowAppointmentDialog(true)}
+                    isSpeaking={isSpeaking}
+                    voiceOutputEnabled={voiceOutputEnabled}
+                    onToggleVoiceOutput={() => setVoiceOutputEnabled((prev) => !prev)}
+                    isVoiceActive={isVoiceActive}
+                    audioLevel={audioLevel}
+                  />
+                </motion.div>
+
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.98 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: 0.1 }}
+                >
+                  <CallTranscript call={activeCall} />
+                </motion.div>
+              </div>
             )}
           </TabsContent>
 
