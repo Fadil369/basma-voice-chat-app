@@ -12,17 +12,26 @@ import { VoiceInputGuide } from '@/components/VoiceInputGuide'
 import { Phone, Calendar, ClockCounterClockwise, ChartLine } from '@phosphor-icons/react'
 import { toast } from 'sonner'
 import { motion } from 'framer-motion'
+import { useSpeechSynthesis } from '@/hooks/use-speech-synthesis'
 
 function App() {
   const [calls, setCalls] = useKV<Call[]>('basma-calls', [])
   const [appointments, setAppointments] = useKV<Appointment[]>('basma-appointments', [])
   const [hasSeenVoiceGuide, setHasSeenVoiceGuide] = useKV<boolean>('basma-voice-guide-seen', false)
+  const [voiceOutputEnabled, setVoiceOutputEnabled] = useKV<boolean>('basma-voice-output', true)
   const [activeCall, setActiveCall] = useState<Call | null>(null)
   const [showAppointmentDialog, setShowAppointmentDialog] = useState(false)
   const [showVoiceGuide, setShowVoiceGuide] = useState(false)
 
   const callsList = calls || []
   const appointmentsList = appointments || []
+
+  const { speak, cancel, isSpeaking, isSupported: isSpeechSupported } = useSpeechSynthesis({
+    lang: 'ar-SA',
+    rate: 1.0,
+    pitch: 1.0,
+    volume: 1.0,
+  })
 
   useEffect(() => {
     if (!hasSeenVoiceGuide && activeCall) {
@@ -70,6 +79,12 @@ function App() {
     toast.success('New call connected', {
       description: `${caller.name} is on the line`,
     })
+
+    if (voiceOutputEnabled && isSpeechSupported) {
+      setTimeout(() => {
+        speak(greetingText, { lang: 'ar-SA' })
+      }, 500)
+    }
   }
 
   const sendMessage = async (content: string) => {
@@ -139,6 +154,11 @@ Return a JSON object with:
         (currentCalls || []).map((c) => (c.id === activeCall.id ? updatedCall : c))
       )
 
+      if (voiceOutputEnabled && isSpeechSupported) {
+        const speechLang = /[\u0600-\u06FF]/.test(parsed.response) ? 'ar-SA' : 'en-US'
+        speak(parsed.response, { lang: speechLang })
+      }
+
       if (parsed.triageLevel === 'emergency') {
         toast.error('Emergency Detected!', {
           description: 'Caller requires immediate medical attention',
@@ -187,6 +207,8 @@ Return a JSON object with:
 
   const endCall = () => {
     if (!activeCall) return
+
+    cancel()
 
     const completedCall: Call = {
       ...activeCall,
@@ -377,6 +399,9 @@ Return a JSON object with:
                   onRouteCall={routeCall}
                   onEndCall={endCall}
                   onBookAppointment={() => setShowAppointmentDialog(true)}
+                  isSpeaking={isSpeaking}
+                  voiceOutputEnabled={voiceOutputEnabled}
+                  onToggleVoiceOutput={() => setVoiceOutputEnabled((prev) => !prev)}
                 />
               </motion.div>
             )}

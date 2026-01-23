@@ -8,7 +8,7 @@ import { Separator } from '@/components/ui/separator'
 import { AudioWaveVisualizer } from '@/components/AudioWaveVisualizer'
 import { TriageBadge } from '@/components/TriageBadge'
 import { DepartmentIcon, getDepartmentLabel } from '@/components/DepartmentIcon'
-import { PhoneDisconnect, PaperPlaneTilt, Microphone, MicrophoneSlash } from '@phosphor-icons/react'
+import { PhoneDisconnect, PaperPlaneTilt, Microphone, MicrophoneSlash, SpeakerHigh, SpeakerSlash } from '@phosphor-icons/react'
 import { useSpeechRecognition } from '@/hooks/use-speech-recognition'
 import { motion } from 'framer-motion'
 import { toast } from 'sonner'
@@ -19,6 +19,9 @@ interface CallInterfaceProps {
   onRouteCall: (department: Department) => void
   onEndCall: () => void
   onBookAppointment: () => void
+  isSpeaking?: boolean
+  voiceOutputEnabled?: boolean
+  onToggleVoiceOutput?: () => void
 }
 
 export function CallInterface({
@@ -27,6 +30,9 @@ export function CallInterface({
   onRouteCall,
   onEndCall,
   onBookAppointment,
+  isSpeaking = false,
+  voiceOutputEnabled = true,
+  onToggleVoiceOutput,
 }: CallInterfaceProps) {
   const [inputValue, setInputValue] = useState('')
   const [useVoiceInput, setUseVoiceInput] = useState(false)
@@ -113,6 +119,16 @@ export function CallInterface({
           </div>
           <div className="flex items-center gap-2">
             {call.triageLevel && <TriageBadge level={call.triageLevel} />}
+            {isSpeaking && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="flex items-center gap-2 px-3 py-1 bg-accent/20 rounded-full text-accent-foreground"
+              >
+                <SpeakerHigh className="w-4 h-4" weight="fill" />
+                <span className="text-xs font-medium">Speaking...</span>
+              </motion.div>
+            )}
             {call.state === 'active' && (
               <div className="flex items-center gap-2 text-primary">
                 <div className="w-2 h-2 rounded-full bg-primary pulse-ring" />
@@ -122,7 +138,7 @@ export function CallInterface({
           </div>
         </div>
 
-        <AudioWaveVisualizer isActive={isActive || isListening} bars={7} />
+        <AudioWaveVisualizer isActive={isActive || isListening || isSpeaking} bars={7} />
 
         {call.department && (
           <motion.div
@@ -259,6 +275,26 @@ export function CallInterface({
           </div>
 
           <div className="flex flex-wrap gap-2">
+            {onToggleVoiceOutput && (
+              <Button 
+                variant={voiceOutputEnabled ? "default" : "outline"} 
+                size="sm" 
+                onClick={onToggleVoiceOutput}
+                className="gap-2"
+              >
+                {voiceOutputEnabled ? (
+                  <>
+                    <SpeakerHigh className="w-4 h-4" weight="fill" />
+                    Voice On
+                  </>
+                ) : (
+                  <>
+                    <SpeakerSlash className="w-4 h-4" weight="fill" />
+                    Voice Off
+                  </>
+                )}
+              </Button>
+            )}
             <Button variant="outline" size="sm" onClick={onBookAppointment}>
               Book Appointment
             </Button>

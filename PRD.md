@@ -13,11 +13,11 @@ This is a demonstration interface for a voice AI system with core features like 
 ## Essential Features
 
 ### Voice Call Simulation
-- **Functionality**: Handles real voice calls with Web Speech API for live transcription and AI-powered response generation, supporting both Arabic and English voice input
-- **Purpose**: Demonstrates Basma's ability to handle actual Arabic voice conversations with real-time speech recognition for Saudi dialects
+- **Functionality**: Handles real voice calls with Web Speech API for live transcription and speech synthesis for voice responses, supporting both Arabic and English voice input and output
+- **Purpose**: Demonstrates Basma's ability to handle actual Arabic voice conversations with real-time speech recognition for Saudi dialects and natural-sounding voice responses
 - **Trigger**: User clicks "Start Call" button, then uses microphone button to speak
-- **Progression**: Button click → Call connects with audio wave animation → AI greeting plays → User clicks microphone button → Browser requests permission → User speaks in Arabic/English → Real-time transcription appears → User sends transcribed message → AI processes in Arabic/English → Response displayed with voice indicator → Call can be routed/completed
-- **Success criteria**: Speech recognition works in both Arabic (ar-SA) and English (en-US), real-time transcription displays correctly, Arabic text displays with proper RTL, interim results show during speech, final transcription sent as message
+- **Progression**: Button click → Call connects with audio wave animation → AI greeting plays with voice synthesis → User clicks microphone button → Browser requests permission → User speaks in Arabic/English → Real-time transcription appears → User sends transcribed message → AI processes in Arabic/English → Response displayed with voice indicator → Basma speaks response using speech synthesis → Call can be routed/completed
+- **Success criteria**: Speech recognition works in both Arabic (ar-SA) and English (en-US), real-time transcription displays correctly, Arabic text displays with proper RTL, interim results show during speech, final transcription sent as message, AI responses are spoken aloud with proper language detection, voice can be toggled on/off
 
 ### Intelligent Call Routing
 - **Functionality**: Routes callers to appropriate departments (General Inquiry, Appointments, Emergency, Billing) based on intent
@@ -51,7 +51,10 @@ This is a demonstration interface for a voice AI system with core features like 
 
 - **Dialect Recognition Failure**: If AI cannot understand dialect, offer to switch to Modern Standard Arabic or display helpful Arabic text prompts; Web Speech API automatically handles dialect variations
 - **Microphone Permission Denied**: Clear message displayed when user denies microphone access, with fallback to text input
-- **Browser Compatibility**: Graceful degradation to text-only input when Web Speech API is not supported (Safari, older browsers)
+- **Speech Synthesis Unavailable**: When speech synthesis is not supported, gracefully disable voice output with visual indicator
+- **Browser Compatibility**: Graceful degradation to text-only input/output when Web Speech API is not supported (Safari, older browsers)
+- **Language Detection**: Automatically detects Arabic vs English in AI responses to use correct voice synthesis language
+- **Voice Interruption**: New voice responses cancel previous ongoing speech to prevent overlapping audio
 - **Emergency Detection**: Any mention of chest pain, severe bleeding, difficulty breathing automatically triggers emergency protocol with visual alert
 - **Unclear Intent**: When routing is ambiguous, AI asks clarifying question rather than guessing, showing multiple options
 - **Appointment Conflicts**: System checks for double-bookings and suggests alternative times
@@ -126,6 +129,7 @@ Animations should feel smooth and reassuring like a calm healthcare professional
 - **Icon Selection**:
   - Phone/PhoneCall: Incoming calls and call actions
   - Microphone/MicrophoneSlash: Real-time voice input control (active/inactive states)
+  - SpeakerHigh/SpeakerSlash: Voice output control (enabled/disabled states)
   - Calendar: Appointment booking
   - ClockCounterClockwise: Call history
   - ChartLine: Analytics
