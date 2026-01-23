@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useKV } from '@github/spark/hooks'
 import { Call, Appointment, Message, Department, TriageLevel } from '@/lib/types'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
@@ -8,6 +8,7 @@ import { CallInterface } from '@/components/CallInterface'
 import { AppointmentDialog } from '@/components/AppointmentDialog'
 import { CallHistory } from '@/components/CallHistory'
 import { AppointmentList } from '@/components/AppointmentList'
+import { VoiceInputGuide } from '@/components/VoiceInputGuide'
 import { Phone, Calendar, ClockCounterClockwise, ChartLine } from '@phosphor-icons/react'
 import { toast } from 'sonner'
 import { motion } from 'framer-motion'
@@ -15,11 +16,23 @@ import { motion } from 'framer-motion'
 function App() {
   const [calls, setCalls] = useKV<Call[]>('basma-calls', [])
   const [appointments, setAppointments] = useKV<Appointment[]>('basma-appointments', [])
+  const [hasSeenVoiceGuide, setHasSeenVoiceGuide] = useKV<boolean>('basma-voice-guide-seen', false)
   const [activeCall, setActiveCall] = useState<Call | null>(null)
   const [showAppointmentDialog, setShowAppointmentDialog] = useState(false)
+  const [showVoiceGuide, setShowVoiceGuide] = useState(false)
 
   const callsList = calls || []
   const appointmentsList = appointments || []
+
+  useEffect(() => {
+    if (!hasSeenVoiceGuide && activeCall) {
+      const timer = setTimeout(() => {
+        setShowVoiceGuide(true)
+        setHasSeenVoiceGuide(true)
+      }, 1500)
+      return () => clearTimeout(timer)
+    }
+  }, [activeCall, hasSeenVoiceGuide, setHasSeenVoiceGuide])
 
   const generateId = () => Date.now().toString(36) + Math.random().toString(36).substr(2)
 
@@ -392,6 +405,8 @@ Return a JSON object with:
             : undefined
         }
       />
+
+      <VoiceInputGuide show={showVoiceGuide} onClose={() => setShowVoiceGuide(false)} />
     </div>
   )
 }

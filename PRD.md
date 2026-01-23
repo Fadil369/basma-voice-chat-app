@@ -13,11 +13,11 @@ This is a demonstration interface for a voice AI system with core features like 
 ## Essential Features
 
 ### Voice Call Simulation
-- **Functionality**: Simulates incoming voice calls with real-time audio visualization and AI-powered response generation
-- **Purpose**: Demonstrates Basma's ability to handle Arabic customer calls with dialect understanding
-- **Trigger**: User clicks "Start Call" or "Simulate Incoming Call" button
-- **Progression**: Button click → Call connects with audio wave animation → AI greeting plays → User speaks (simulated text input) → AI processes in Arabic → Response displayed with voice indicator → Call can be routed/completed
-- **Success criteria**: Call state transitions smoothly, Arabic text displays correctly, audio visualization animates during "speech"
+- **Functionality**: Handles real voice calls with Web Speech API for live transcription and AI-powered response generation, supporting both Arabic and English voice input
+- **Purpose**: Demonstrates Basma's ability to handle actual Arabic voice conversations with real-time speech recognition for Saudi dialects
+- **Trigger**: User clicks "Start Call" button, then uses microphone button to speak
+- **Progression**: Button click → Call connects with audio wave animation → AI greeting plays → User clicks microphone button → Browser requests permission → User speaks in Arabic/English → Real-time transcription appears → User sends transcribed message → AI processes in Arabic/English → Response displayed with voice indicator → Call can be routed/completed
+- **Success criteria**: Speech recognition works in both Arabic (ar-SA) and English (en-US), real-time transcription displays correctly, Arabic text displays with proper RTL, interim results show during speech, final transcription sent as message
 
 ### Intelligent Call Routing
 - **Functionality**: Routes callers to appropriate departments (General Inquiry, Appointments, Emergency, Billing) based on intent
@@ -49,7 +49,9 @@ This is a demonstration interface for a voice AI system with core features like 
 
 ## Edge Case Handling
 
-- **Dialect Recognition Failure**: If AI cannot understand dialect, offer to switch to Modern Standard Arabic or display helpful Arabic text prompts
+- **Dialect Recognition Failure**: If AI cannot understand dialect, offer to switch to Modern Standard Arabic or display helpful Arabic text prompts; Web Speech API automatically handles dialect variations
+- **Microphone Permission Denied**: Clear message displayed when user denies microphone access, with fallback to text input
+- **Browser Compatibility**: Graceful degradation to text-only input when Web Speech API is not supported (Safari, older browsers)
 - **Emergency Detection**: Any mention of chest pain, severe bleeding, difficulty breathing automatically triggers emergency protocol with visual alert
 - **Unclear Intent**: When routing is ambiguous, AI asks clarifying question rather than guessing, showing multiple options
 - **Appointment Conflicts**: System checks for double-bookings and suggests alternative times
@@ -123,6 +125,7 @@ Animations should feel smooth and reassuring like a calm healthcare professional
 
 - **Icon Selection**:
   - Phone/PhoneCall: Incoming calls and call actions
+  - Microphone/MicrophoneSlash: Real-time voice input control (active/inactive states)
   - Calendar: Appointment booking
   - ClockCounterClockwise: Call history
   - ChartLine: Analytics
@@ -130,7 +133,6 @@ Animations should feel smooth and reassuring like a calm healthcare professional
   - Warning: Emergency/triage alerts
   - ArrowRight/CaretRight: Routing flow
   - User/UserCircle: Caller identification
-  - Microphone: Voice input indication
   - CheckCircle: Completed actions
 
 - **Spacing**:

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Call, Department, TriageLevel } from '@/lib/types'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -8,8 +8,10 @@ import { Separator } from '@/components/ui/separator'
 import { AudioWaveVisualizer } from '@/components/AudioWaveVisualizer'
 import { TriageBadge } from '@/components/TriageBadge'
 import { DepartmentIcon, getDepartmentLabel } from '@/components/DepartmentIcon'
-import { PhoneDisconnect, PaperPlaneTilt, ArrowRight } from '@phosphor-icons/react'
+import { PhoneDisconnect, PaperPlaneTilt, Microphone, MicrophoneSlash } from '@phosphor-icons/react'
+import { useSpeechRecognition } from '@/hooks/use-speech-recognition'
 import { motion } from 'framer-motion'
+import { toast } from 'sonner'
 
 interface CallInterfaceProps {
   call: Call
@@ -27,12 +29,50 @@ export function CallInterface({
   onBookAppointment,
 }: CallInterfaceProps) {
   const [inputValue, setInputValue] = useState('')
+  const [useVoiceInput, setUseVoiceInput] = useState(false)
+  const [currentLanguage, setCurrentLanguage] = useState<'ar-SA' | 'en-US'>('ar-SA')
   const isActive = call.state === 'active'
+
+  const {
+    transcript,
+    interimTranscript,
+    isListening,
+    isSupported,
+    startListening,
+    stopListening,
+    resetTranscript,
+    error,
+  } = useSpeechRecognition({
+    lang: currentLanguage,
+    continuous: false,
+    interimResults: true,
+    onResult: (text, isFinal) => {
+      if (isFinal && text.trim()) {
+        setInputValue((prev) => prev + text + ' ')
+      }
+    },
+    onError: (errorType) => {
+      if (errorType !== 'no-speech' && errorType !== 'aborted') {
+        toast.error('Voice input error', {
+          description: errorType === 'not-allowed' 
+            ? 'Microphone permission denied' 
+            : `Error: ${errorType}`,
+        })
+      }
+    },
+  })
+
+  useEffect(() => {
+    if (!isActive && isListening) {
+      stopListening()
+    }
+  }, [isActive, isListening, stopListening])
 
   const handleSend = () => {
     if (inputValue.trim()) {
       onSendMessage(inputValue)
       setInputValue('')
+      resetTranscript()
     }
   }
 
@@ -41,6 +81,24 @@ export function CallInterface({
       e.preventDefault()
       handleSend()
     }
+  }
+
+  const toggleVoiceInput = () => {
+    if (isListening) {
+      stopListening()
+    } else {
+      startListening({ lang: currentLanguage })
+    }
+  }
+
+  const toggleLanguage = () => {
+    const newLang = currentLanguage === 'ar-SA' ? 'en-US' : 'ar-SA'
+    setCurrentLanguage(newLang)
+    if (isListening) {
+      stopListening()
+      setTimeout(() => startListening({ lang: newLang }), 100)
+    }
+    toast.success(newLang === 'ar-SA' ? 'Arabic voice mode' : 'English voice mode')
   }
 
   return (
@@ -64,7 +122,7 @@ export function CallInterface({
           </div>
         </div>
 
-        <AudioWaveVisualizer isActive={isActive} bars={7} />
+        <AudioWaveVisualizer isActive={isActive || isListening} bars={7} />
 
         {call.department && (
           <motion.div
@@ -121,18 +179,83 @@ export function CallInterface({
 
       {isActive && (
         <div className="p-6 border-t space-y-4">
-          <div className="flex gap-2">
-            <Textarea
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-              onKeyDown={handleKeyPress}
-              placeholder="Type message (simulated voice input)..."
-              className="flex-1 min-h-[80px] resize-none"
-              dir="auto"
-            />
-            <Button onClick={handleSend} size="icon" className="h-[80px] w-[80px]">
-              <PaperPlaneTilt className="w-5 h-5" weight="fill" />
-            </Button>
+          {!isSupported && (
+            <div className="p-3 bg-warning/10 border border-warning/20 rounded-lg text-sm text-warning-foreground">
+              Voice input is not supported in your browser. Please use text input.
+            </div>
+          )}
+
+          <div className="flex gap-2 items-end">
+            <div className="flex-1 space-y-2">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  {isListening && (
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      className="flex items-center gap-2 text-primary text-sm"
+                    >
+                      <div className="w-2 h-2 rounded-full bg-destructive pulse-ring" />
+                      <span>Listening...</span>
+                    </motion.div>
+                  )}
+                </div>
+                {isSupported && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={toggleLanguage}
+                    className="text-xs"
+                  >
+                    {currentLanguage === 'ar-SA' ? 'العربية' : 'English'}
+                  </Button>
+                )}
+              </div>
+              <Textarea
+                value={inputValue + (interimTranscript ? interimTranscript : '')}
+                onChange={(e) => setInputValue(e.target.value)}
+                onKeyDown={handleKeyPress}
+                placeholder={
+                  isSupported
+                    ? currentLanguage === 'ar-SA'
+                      ? 'اكتب أو اضغط على الميكروفون للتحدث...'
+                      : 'Type or click microphone to speak...'
+                    : 'Type your message...'
+                }
+                className="flex-1 min-h-[80px] resize-none"
+                dir="auto"
+                disabled={isListening}
+              />
+              {interimTranscript && (
+                <div className="text-xs text-muted-foreground italic px-2">
+                  Transcribing: {interimTranscript}
+                </div>
+              )}
+            </div>
+            <div className="flex flex-col gap-2">
+              {isSupported && (
+                <Button
+                  onClick={toggleVoiceInput}
+                  size="icon"
+                  variant={isListening ? 'destructive' : 'secondary'}
+                  className="h-[80px] w-[80px]"
+                >
+                  {isListening ? (
+                    <MicrophoneSlash className="w-6 h-6" weight="fill" />
+                  ) : (
+                    <Microphone className="w-6 h-6" weight="fill" />
+                  )}
+                </Button>
+              )}
+              <Button
+                onClick={handleSend}
+                size="icon"
+                className="h-[80px] w-[80px]"
+                disabled={!inputValue.trim()}
+              >
+                <PaperPlaneTilt className="w-5 h-5" weight="fill" />
+              </Button>
+            </div>
           </div>
 
           <div className="flex flex-wrap gap-2">
