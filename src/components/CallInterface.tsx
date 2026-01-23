@@ -6,6 +6,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Separator } from '@/components/ui/separator'
 import { AudioWaveVisualizer } from '@/components/AudioWaveVisualizer'
+import { VolumeLevelIndicator } from '@/components/VolumeLevelIndicator'
 import { TriageBadge } from '@/components/TriageBadge'
 import { DepartmentIcon, getDepartmentLabel } from '@/components/DepartmentIcon'
 import { PhoneDisconnect, PaperPlaneTilt, Microphone, MicrophoneSlash, SpeakerHigh, SpeakerSlash } from '@phosphor-icons/react'
@@ -23,6 +24,7 @@ interface CallInterfaceProps {
   voiceOutputEnabled?: boolean
   onToggleVoiceOutput?: () => void
   isVoiceActive?: boolean
+  audioLevel?: number
 }
 
 export function CallInterface({
@@ -35,6 +37,7 @@ export function CallInterface({
   voiceOutputEnabled = true,
   onToggleVoiceOutput,
   isVoiceActive = false,
+  audioLevel = -100,
 }: CallInterfaceProps) {
   const [inputValue, setInputValue] = useState('')
   const [useVoiceInput, setUseVoiceInput] = useState(false)
@@ -150,7 +153,24 @@ export function CallInterface({
           </div>
         </div>
 
-        <AudioWaveVisualizer isActive={isActive || isListening || isSpeaking || isVoiceActive} bars={7} />
+        <div className="space-y-3">
+          <AudioWaveVisualizer isActive={isActive || isListening || isSpeaking || isVoiceActive} bars={7} />
+          
+          <div className="flex items-center gap-3 p-3 bg-muted/50 rounded-lg">
+            <span className="text-xs font-medium text-muted-foreground min-w-[80px]">
+              Volume Level
+            </span>
+            <VolumeLevelIndicator 
+              audioLevel={audioLevel} 
+              isActive={isActive && (isListening || isVoiceActive)} 
+              className="flex-1"
+              bars={15}
+            />
+            <span className="text-xs font-mono text-muted-foreground min-w-[50px] text-right">
+              {Math.max(-100, Math.round(audioLevel))} dB
+            </span>
+          </div>
+        </div>
 
         {call.department && (
           <motion.div

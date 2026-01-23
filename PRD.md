@@ -13,11 +13,11 @@ This is a demonstration interface for a voice AI system with core features like 
 ## Essential Features
 
 ### Voice Call Simulation
-- **Functionality**: Handles real voice calls with Web Speech API for live transcription and speech synthesis for voice responses, supporting both Arabic and English voice input and output. Includes automatic voice activity detection that pauses Basma's speech when the user starts speaking.
-- **Purpose**: Demonstrates Basma's ability to handle actual Arabic voice conversations with real-time speech recognition for Saudi dialects and natural-sounding voice responses, creating natural conversation flow by intelligently managing turn-taking
+- **Functionality**: Handles real voice calls with Web Speech API for live transcription and speech synthesis for voice responses, supporting both Arabic and English voice input and output. Includes automatic voice activity detection that pauses Basma's speech when the user starts speaking, with real-time visual volume level indicators showing audio activity.
+- **Purpose**: Demonstrates Basma's ability to handle actual Arabic voice conversations with real-time speech recognition for Saudi dialects and natural-sounding voice responses, creating natural conversation flow by intelligently managing turn-taking with visual feedback of audio levels
 - **Trigger**: User clicks "Start Call" button, then uses microphone button to speak
-- **Progression**: Button click → Call connects with audio wave animation → Voice activity detection starts monitoring → AI greeting plays with voice synthesis → User clicks microphone button → Browser requests permission → User speaks in Arabic/English → Voice activity detected, Basma's speech automatically pauses → Real-time transcription appears → User sends transcribed message → AI processes in Arabic/English → Response displayed with voice indicator → Basma speaks response using speech synthesis → Voice activity detection continuously monitors for interruptions → Call can be routed/completed
-- **Success criteria**: Speech recognition works in both Arabic (ar-SA) and English (en-US), real-time transcription displays correctly, Arabic text displays with proper RTL, interim results show during speech, final transcription sent as message, AI responses are spoken aloud with proper language detection, voice can be toggled on/off, voice activity detection automatically pauses speech output when user starts speaking, visual indicators show when voice is detected, smooth conversation turn-taking without audio overlap
+- **Progression**: Button click → Call connects with audio wave animation → Voice activity detection starts monitoring → AI greeting plays with voice synthesis → User clicks microphone button → Browser requests permission → User speaks in Arabic/English → Voice activity detected with real-time volume bars showing audio levels, Basma's speech automatically pauses → Real-time transcription appears → User sends transcribed message → AI processes in Arabic/English → Response displayed with voice indicator → Basma speaks response using speech synthesis → Volume level indicator continuously displays audio activity in decibels → Voice activity detection continuously monitors for interruptions → Call can be routed/completed
+- **Success criteria**: Speech recognition works in both Arabic (ar-SA) and English (en-US), real-time transcription displays correctly, Arabic text displays with proper RTL, interim results show during speech, final transcription sent as message, AI responses are spoken aloud with proper language detection, voice can be toggled on/off, voice activity detection automatically pauses speech output when user starts speaking, visual indicators show when voice is detected, volume level bars animate in real-time showing audio intensity with color-coded levels (green/yellow/red), decibel measurement displayed accurately, smooth conversation turn-taking without audio overlap
 
 ### Intelligent Call Routing
 - **Functionality**: Routes callers to appropriate departments (General Inquiry, Appointments, Emergency, Billing) based on intent
@@ -97,7 +97,7 @@ Typography should feel modern and highly legible while supporting Arabic script 
 
 ## Animations
 
-Animations should feel smooth and reassuring like a calm healthcare professional - nothing jarring or sudden. Use gentle fades for state transitions, subtle pulse effects for active call indicators, and flowing wave animations for voice activity. The audio visualization should feel organic and alive, similar to breath or heartbeat rhythms. Routing transitions should feel like a gentle hand-off with sliding cards. Keep most animations in the 300-400ms range for a responsive but never rushed feeling, with micro-interactions (button presses) at 150ms for immediate feedback.
+Animations should feel smooth and reassuring like a calm healthcare professional - nothing jarring or sudden. Use gentle fades for state transitions, subtle pulse effects for active call indicators, and flowing wave animations for voice activity. The audio visualization should feel organic and alive, similar to breath or heartbeat rhythms. Volume level bars should animate fluidly with scaling and color transitions responding to real-time audio input. Routing transitions should feel like a gentle hand-off with sliding cards. Keep most animations in the 300-400ms range for a responsive but never rushed feeling, with micro-interactions (button presses) at 150ms for immediate feedback, and real-time volume indicators updating continuously at 60fps for smooth visual feedback.
 
 ## Component Selection
 
@@ -116,6 +116,7 @@ Animations should feel smooth and reassuring like a calm healthcare professional
 
 - **Customizations**:
   - **Audio Wave Visualization**: Custom SVG component showing animated wave bars that pulse with voice activity
+  - **Volume Level Indicator**: Real-time horizontal bar graph displaying audio activity levels in decibels, with 15 animated bars that scale and change color (green/yellow/red) based on volume intensity
   - **Call Status Indicator**: Pulsing dot animation in teal during active calls
   - **Triage Level Cards**: Color-coded cards (green/yellow/red) with icons and urgency levels
   - **Arabic Text Direction**: All text inputs and conversation displays properly handle RTL with dir="auto"

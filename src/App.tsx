@@ -34,7 +34,7 @@ function App() {
     volume: 1.0,
   })
 
-  const { isVoiceActive, startMonitoring, stopMonitoring, isSupported: isVADSupported } = useVoiceActivityDetection({
+  const { isVoiceActive, startMonitoring, stopMonitoring, isSupported: isVADSupported, audioLevel } = useVoiceActivityDetection({
     enabled: voiceOutputEnabled && activeCall !== null,
     threshold: -45,
     onVoiceStart: () => {
@@ -429,6 +429,7 @@ Return a JSON object with:
                   voiceOutputEnabled={voiceOutputEnabled}
                   onToggleVoiceOutput={() => setVoiceOutputEnabled((prev) => !prev)}
                   isVoiceActive={isVoiceActive}
+                  audioLevel={audioLevel}
                 />
               </motion.div>
             )}
