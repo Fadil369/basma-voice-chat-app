@@ -55,10 +55,20 @@ export function useSpeechSynthesis(
       const availableVoices = window.speechSynthesis.getVoices()
       setVoices(availableVoices)
 
+      const femaleArabicVoice = availableVoices.find((voice) =>
+        voice.lang.startsWith('ar') && voice.name.toLowerCase().includes('female')
+      )
+      const anyArabicFemaleVoice = availableVoices.find((voice) =>
+        voice.lang.startsWith('ar') && 
+        (voice.name.toLowerCase().includes('female') || 
+         voice.name.toLowerCase().includes('laila') ||
+         voice.name.toLowerCase().includes('maged') ||
+         voice.name.toLowerCase().includes('samantha'))
+      )
       const arabicVoice = availableVoices.find((voice) =>
         voice.lang.startsWith('ar')
       )
-      const defaultVoice = arabicVoice || availableVoices[0]
+      const defaultVoice = femaleArabicVoice || anyArabicFemaleVoice || arabicVoice || availableVoices[0]
       setSelectedVoice(defaultVoice || null)
     }
 

@@ -1,16 +1,30 @@
 # Planning Guide
 
-Basma is an intelligent voice-enabled customer service platform designed for Arabic-speaking markets, specializing in healthcare appointment booking, call routing, and patient triage with native Saudi dialect comprehension.
+Basma is an intelligent voice-enabled customer service platform designed for Arabic-speaking markets, specializing in healthcare appointment booking, call routing, and patient triage with native Saudi dialect comprehension. The system features a modern CallLinc interface with enhanced female voice output and seamless integration with the comprehensive dashboard.
 
 **Experience Qualities**:
-1. **Welcoming** - The interface should feel approachable and reassuring, especially for healthcare seekers who may be anxious or uncertain.
-2. **Intelligent** - Demonstrate sophisticated AI capabilities through smooth voice interactions and context-aware responses that understand nuanced Arabic dialects.
-3. **Efficient** - Streamline the call handling process with clear visual feedback and quick access to key functions like routing and appointment management.
+1. **Welcoming** - The interface should feel approachable and reassuring, especially for healthcare seekers who may be anxious or uncertain. The CallLinc interface provides a calming, intuitive voice interaction experience.
+2. **Intelligent** - Demonstrate sophisticated AI capabilities through smooth voice interactions and context-aware responses that understand nuanced Arabic dialects, with enhanced female voice synthesis for natural conversation.
+3. **Efficient** - Streamline the call handling process with clear visual feedback and quick access to key functions like routing and appointment management through both voice and traditional dashboard interfaces.
 
 **Complexity Level**: Light Application (multiple features with basic state)
-This is a demonstration interface for a voice AI system with core features like call simulation, appointment booking, caller routing, and triage visualization. It doesn't require backend integration or complex multi-view navigation, making it ideal as a light application.
+This is a demonstration interface for a voice AI system with core features like call simulation, appointment booking, caller routing, and triage visualization. The CallLinc interface provides a modern, mobile-app-inspired voice interaction layer while the comprehensive dashboard offers detailed management and analytics capabilities.
 
 ## Essential Features
+
+### CallLinc Voice Interface (NEW - Primary Interface)
+- **Functionality**: Modern voice call interface with large circular microphone button, concentric pulsing animations, quick response buttons (Yes/No/Thanks in English and Arabic), and bottom navigation tabs for Voice, Text Chat, and Insights
+- **Purpose**: Provides an intuitive, visually striking voice interaction experience modeled after modern voice AI applications, with enhanced female voice output for natural conversation
+- **Trigger**: Default landing view when app loads or accessed via "CallLinc" tab
+- **Progression**: Interface loads with animated gradient background → Large microphone button displayed → User taps to activate voice input → Concentric pulse rings animate → Voice detected → Real-time transcription shown below → AI responds with female-enhanced voice → Quick response buttons provide shortcuts → Navigation allows switching to dashboard views
+- **Success criteria**: Smooth animations at 60fps, voice input activates immediately on tap, pulsing rings animate during active listening, female voice synthesis works in both Arabic and English, quick response buttons send messages instantly, interface adapts to call state (idle/active/ended)
+
+### Enhanced Female Voice Output
+- **Functionality**: Automatically selects high-quality female voice for speech synthesis, prioritizing Arabic female voices with fallback options
+- **Purpose**: Provides a more natural, engaging conversational experience aligned with Basma's identity
+- **Trigger**: Any AI response that needs to be spoken aloud
+- **Progression**: AI generates text response → Voice synthesis initialized → Female Arabic voice selected (Laila, Samantha, or best available) → Speech output begins → Visual indicators show speaking state
+- **Success criteria**: Female voice selected consistently across sessions, natural intonation for both Arabic and English, clear pronunciation of medical and technical terms, smooth voice characteristics without robotic artifacts
 
 ### Voice Call Simulation
 - **Functionality**: Handles real voice calls with Web Speech API for live transcription and speech synthesis for voice responses, supporting both Arabic and English voice input and output. Includes automatic voice activity detection that pauses Basma's speech when the user starts speaking, with real-time visual volume level indicators showing audio activity.

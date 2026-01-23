@@ -5,6 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { CallInterface } from '@/components/CallInterface'
+import { CallLincInterface } from '@/components/CallLincInterface'
 import { AppointmentDialog } from '@/components/AppointmentDialog'
 import { CallHistory } from '@/components/CallHistory'
 import { AppointmentList } from '@/components/AppointmentList'
@@ -313,8 +314,12 @@ Return a JSON object with:
           </div>
         </motion.header>
 
-        <Tabs defaultValue="dashboard" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4 lg:w-auto lg:inline-grid">
+        <Tabs defaultValue="voice" className="space-y-6">
+          <TabsList className="grid w-full grid-cols-5 lg:w-auto lg:inline-grid">
+            <TabsTrigger value="voice" className="gap-2">
+              <Phone className="w-4 h-4" />
+              <span className="hidden sm:inline">CallLinc</span>
+            </TabsTrigger>
             <TabsTrigger value="dashboard" className="gap-2">
               <ChartLine className="w-4 h-4" />
               <span className="hidden sm:inline">Dashboard</span>
@@ -332,6 +337,24 @@ Return a JSON object with:
               <span className="hidden sm:inline">Appointments</span>
             </TabsTrigger>
           </TabsList>
+
+          <TabsContent value="voice" className="space-y-6">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.98 }}
+              animate={{ opacity: 1, scale: 1 }}
+            >
+              <CallLincInterface
+                call={activeCall}
+                onSendMessage={sendMessage}
+                onEndCall={endCall}
+                isSpeaking={isSpeaking}
+                voiceOutputEnabled={voiceOutputEnabled}
+                onToggleVoiceOutput={() => setVoiceOutputEnabled((prev) => !prev)}
+                isVoiceActive={isVoiceActive}
+                audioLevel={audioLevel}
+              />
+            </motion.div>
+          </TabsContent>
 
           <TabsContent value="dashboard" className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
