@@ -54,6 +54,13 @@ This is a demonstration interface for a voice AI system with core features like 
 - **Progression**: Symptoms described → AI analyzes urgency → Triage level assigned (green/yellow/red) → Recommended action displayed → Appointment priority set or emergency protocol triggered
 - **Success criteria**: Triage levels clearly color-coded, appropriate urgency messages displayed, emergency cases flagged prominently
 
+### Real-Time Sentiment Analysis Visualization
+- **Functionality**: Analyzes and visualizes caller sentiment in real-time during active calls, showing overall sentiment (positive/neutral/negative), emotional state, confidence level, sentiment breakdown percentages, and trend analysis (improving/declining/stable)
+- **Purpose**: Provides agents with emotional intelligence insights to better understand caller state and adjust their approach accordingly, especially critical in healthcare contexts
+- **Trigger**: Automatically activates during active calls, analyzing messages as conversation progresses
+- **Progression**: Call active → Messages exchanged → AI analyzes sentiment every few messages → Visual cards show overall sentiment with color-coded icons → Emotional state displayed (calm, worried, frustrated, etc.) → Trend indicator shows if sentiment is improving/declining → Breakdown bars show positive/neutral/negative percentages → Timeline shows sentiment evolution → Alert shown if negative sentiment detected
+- **Success criteria**: Sentiment updates in real-time with 1-2 second latency, confidence scores display accurately (0-100%), color-coding matches sentiment (green=positive, yellow=neutral, red=negative), trend analysis reflects conversation progression, alerts appear for concerning negative sentiment, smooth animations at 60fps, sentiment timeline shows last 5 messages
+
 ### Conversation History & Analytics
 - **Functionality**: Displays call history with transcripts, outcomes, and basic analytics
 - **Purpose**: Provides oversight of system performance and caller patterns
@@ -70,6 +77,7 @@ This is a demonstration interface for a voice AI system with core features like 
 - **Browser Compatibility**: Graceful degradation to text-only input/output when Web Speech API is not supported (Safari, older browsers)
 - **Language Detection**: Automatically detects Arabic vs English in AI responses to use correct voice synthesis language
 - **Voice Interruption**: Voice activity detection automatically pauses speech synthesis when user starts speaking; new voice responses cancel previous ongoing speech to prevent overlapping audio
+- **Sentiment Analysis Failure**: If LLM sentiment analysis fails or times out, system displays last known sentiment or neutral state with reduced confidence, ensuring UI remains functional
 - **Emergency Detection**: Any mention of chest pain, severe bleeding, difficulty breathing automatically triggers emergency protocol with visual alert
 - **Unclear Intent**: When routing is ambiguous, AI asks clarifying question rather than guessing, showing multiple options
 - **Appointment Conflicts**: System checks for double-bookings and suggests alternative times
@@ -135,12 +143,14 @@ Animations should feel smooth and reassuring like a calm healthcare professional
   - **Triage Level Cards**: Color-coded cards (green/yellow/red) with icons and urgency levels
   - **Arabic Text Direction**: All text inputs and conversation displays properly handle RTL with dir="auto"
   - **Department Icons**: Custom icons for routing destinations using Phosphor icons (Hospital, Calendar, Warning, CreditCard)
+  - **Sentiment Visualization**: Real-time animated cards showing sentiment analysis with color-coded icons (Smiley=positive, SmileyMeh=neutral, SmileyXEyes=negative), progress bars with gradient fills, trend indicators (TrendUp/TrendDown/Minus), and timeline visualization showing sentiment evolution
 
 - **States**:
   - **Buttons**: Idle (solid teal), Hover (darker teal with subtle lift), Active (pressed with scale), Disabled (muted sand with low opacity), Loading (spinner in button)
   - **Call State**: Idle/Incoming/Active/Routing/Completed with distinct visual indicators
   - **Input Fields**: Default (border-sand), Focus (border-teal with glow), Filled (subtle background), Error (border-red with message)
   - **Cards**: Default (subtle shadow), Hover (lifted shadow for clickable items), Active Call (teal border glow)
+  - **Sentiment Cards**: Color-coded backgrounds based on sentiment (green=positive, yellow=neutral, red=negative) with animated gradient overlays, pulsing confidence badges, and smooth transitions between states
 
 - **Icon Selection**:
   - Phone/PhoneCall: Incoming calls and call actions
@@ -154,6 +164,11 @@ Animations should feel smooth and reassuring like a calm healthcare professional
   - ArrowRight/CaretRight: Routing flow
   - User/UserCircle: Caller identification
   - CheckCircle: Completed actions
+  - Brain: Sentiment analysis and AI insights
+  - Heart: Emotional state indicator
+  - Smiley/SmileyMeh/SmileyXEyes: Sentiment icons (positive/neutral/negative)
+  - TrendUp/TrendDown/Minus: Sentiment trend indicators
+  - Sparkle: AI processing indicator
 
 - **Spacing**:
   - Consistent padding: Cards (p-6), Buttons (px-6 py-3), Sections (space-y-6)
