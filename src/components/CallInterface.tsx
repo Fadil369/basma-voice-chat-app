@@ -22,6 +22,7 @@ interface CallInterfaceProps {
   isSpeaking?: boolean
   voiceOutputEnabled?: boolean
   onToggleVoiceOutput?: () => void
+  isVoiceActive?: boolean
 }
 
 export function CallInterface({
@@ -33,6 +34,7 @@ export function CallInterface({
   isSpeaking = false,
   voiceOutputEnabled = true,
   onToggleVoiceOutput,
+  isVoiceActive = false,
 }: CallInterfaceProps) {
   const [inputValue, setInputValue] = useState('')
   const [useVoiceInput, setUseVoiceInput] = useState(false)
@@ -119,7 +121,17 @@ export function CallInterface({
           </div>
           <div className="flex items-center gap-2">
             {call.triageLevel && <TriageBadge level={call.triageLevel} />}
-            {isSpeaking && (
+            {isVoiceActive && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="flex items-center gap-2 px-3 py-1 bg-primary/20 rounded-full text-primary"
+              >
+                <Microphone className="w-4 h-4" weight="fill" />
+                <span className="text-xs font-medium">Voice Detected</span>
+              </motion.div>
+            )}
+            {isSpeaking && !isVoiceActive && (
               <motion.div
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
@@ -138,7 +150,7 @@ export function CallInterface({
           </div>
         </div>
 
-        <AudioWaveVisualizer isActive={isActive || isListening || isSpeaking} bars={7} />
+        <AudioWaveVisualizer isActive={isActive || isListening || isSpeaking || isVoiceActive} bars={7} />
 
         {call.department && (
           <motion.div

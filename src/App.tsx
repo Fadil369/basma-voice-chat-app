@@ -13,6 +13,7 @@ import { Phone, Calendar, ClockCounterClockwise, ChartLine } from '@phosphor-ico
 import { toast } from 'sonner'
 import { motion } from 'framer-motion'
 import { useSpeechSynthesis } from '@/hooks/use-speech-synthesis'
+import { useVoiceActivityDetection } from '@/hooks/use-voice-activity-detection'
 
 function App() {
   const [calls, setCalls] = useKV<Call[]>('basma-calls', [])
@@ -32,6 +33,31 @@ function App() {
     pitch: 1.0,
     volume: 1.0,
   })
+
+  const { isVoiceActive, startMonitoring, stopMonitoring, isSupported: isVADSupported } = useVoiceActivityDetection({
+    enabled: voiceOutputEnabled && activeCall !== null,
+    threshold: -45,
+    onVoiceStart: () => {
+      if (isSpeaking && voiceOutputEnabled) {
+        cancel()
+        toast.info('Speech paused', {
+          description: 'Basma paused to listen',
+        })
+      }
+    },
+  })
+
+  useEffect(() => {
+    if (activeCall && voiceOutputEnabled && isVADSupported) {
+      startMonitoring()
+    } else {
+      stopMonitoring()
+    }
+
+    return () => {
+      stopMonitoring()
+    }
+  }, [activeCall, voiceOutputEnabled, isVADSupported, startMonitoring, stopMonitoring])
 
   useEffect(() => {
     if (!hasSeenVoiceGuide && activeCall) {
@@ -402,6 +428,7 @@ Return a JSON object with:
                   isSpeaking={isSpeaking}
                   voiceOutputEnabled={voiceOutputEnabled}
                   onToggleVoiceOutput={() => setVoiceOutputEnabled((prev) => !prev)}
+                  isVoiceActive={isVoiceActive}
                 />
               </motion.div>
             )}
