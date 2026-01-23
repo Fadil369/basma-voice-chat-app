@@ -12,7 +12,8 @@ import { AppointmentList } from '@/components/AppointmentList'
 import { VoiceInputGuide } from '@/components/VoiceInputGuide'
 import { CallTranscript } from '@/components/CallTranscript'
 import { SentimentAnalysis } from '@/components/SentimentAnalysis'
-import { Phone, Calendar, ClockCounterClockwise, ChartLine } from '@phosphor-icons/react'
+import { SentimentAnalyticsDashboard } from '@/components/SentimentAnalyticsDashboard'
+import { Phone, Calendar, ClockCounterClockwise, ChartLine, ChartLineUp } from '@phosphor-icons/react'
 import { toast } from 'sonner'
 import { motion } from 'framer-motion'
 import { useSpeechSynthesis } from '@/hooks/use-speech-synthesis'
@@ -317,7 +318,7 @@ Return a JSON object with:
         </motion.header>
 
         <Tabs defaultValue="voice" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-5 lg:w-auto lg:inline-grid">
+          <TabsList className="grid w-full grid-cols-6 lg:w-auto lg:inline-grid">
             <TabsTrigger value="voice" className="gap-2">
               <Phone className="w-4 h-4" />
               <span className="hidden sm:inline">CallLinc</span>
@@ -337,6 +338,10 @@ Return a JSON object with:
             <TabsTrigger value="appointments" className="gap-2">
               <Calendar className="w-4 h-4" />
               <span className="hidden sm:inline">Appointments</span>
+            </TabsTrigger>
+            <TabsTrigger value="analytics" className="gap-2">
+              <ChartLineUp className="w-4 h-4" />
+              <span className="hidden sm:inline">Analytics</span>
             </TabsTrigger>
           </TabsList>
 
@@ -508,6 +513,10 @@ Return a JSON object with:
 
           <TabsContent value="appointments">
             <AppointmentList appointments={appointmentsList} />
+          </TabsContent>
+
+          <TabsContent value="analytics">
+            <SentimentAnalyticsDashboard calls={callsList} />
           </TabsContent>
         </Tabs>
       </div>

@@ -61,6 +61,13 @@ This is a demonstration interface for a voice AI system with core features like 
 - **Progression**: Call active → Messages exchanged → AI analyzes sentiment every few messages → Visual cards show overall sentiment with color-coded icons → Emotional state displayed (calm, worried, frustrated, etc.) → Trend indicator shows if sentiment is improving/declining → Breakdown bars show positive/neutral/negative percentages → Timeline shows sentiment evolution → Alert shown if negative sentiment detected
 - **Success criteria**: Sentiment updates in real-time with 1-2 second latency, confidence scores display accurately (0-100%), color-coding matches sentiment (green=positive, yellow=neutral, red=negative), trend analysis reflects conversation progression, alerts appear for concerning negative sentiment, smooth animations at 60fps, sentiment timeline shows last 5 messages
 
+### Historical Sentiment Analytics Dashboard
+- **Functionality**: Comprehensive analytics dashboard showing sentiment trends across multiple completed calls with key metrics (positive/neutral/negative call counts and percentages, average call duration), 7-day trend visualization with stacked bar charts, sentiment journey tracking (improving/declining calls), and detailed recent call history with emotional journey visualization
+- **Purpose**: Provides business intelligence and quality assurance insights, helping identify patterns in customer satisfaction, agent performance, and service quality trends over time
+- **Trigger**: User navigates to "Analytics" tab in main navigation
+- **Progression**: User clicks Analytics tab → Dashboard loads with animation → Key metrics cards display (positive/neutral/negative counts with percentages) → 7-day trend chart shows daily sentiment distribution → Sentiment journey section shows improving/declining call counts with success rate → Recent calls list shows detailed sentiment per call with emotional journey arrows → User can review individual call patterns
+- **Success criteria**: Analytics calculate correctly from all completed calls, 7-day trend shows accurate daily breakdowns with color-coded stacked bars, sentiment journey percentages reflect actual call progression, recent calls list displays up to 10 most recent calls with complete metadata (caller name, date, duration, message count, department, triage level), emotional journey arrows show sentiment progression through call, all cards animate smoothly on load, empty state displays when no call data available, success rate calculation includes both positive calls and improving calls
+
 ### Conversation History & Analytics
 - **Functionality**: Displays call history with transcripts, outcomes, and basic analytics
 - **Purpose**: Provides oversight of system performance and caller patterns
@@ -144,6 +151,7 @@ Animations should feel smooth and reassuring like a calm healthcare professional
   - **Arabic Text Direction**: All text inputs and conversation displays properly handle RTL with dir="auto"
   - **Department Icons**: Custom icons for routing destinations using Phosphor icons (Hospital, Calendar, Warning, CreditCard)
   - **Sentiment Visualization**: Real-time animated cards showing sentiment analysis with color-coded icons (Smiley=positive, SmileyMeh=neutral, SmileyXEyes=negative), progress bars with gradient fills, trend indicators (TrendUp/TrendDown/Minus), and timeline visualization showing sentiment evolution
+  - **Sentiment Analytics Dashboard**: Comprehensive historical analytics with metric cards showing counts and percentages, 7-day trend stacked bar chart with animated bars for each sentiment type, sentiment journey cards tracking improving/declining trends with success rate progress bar, and recent call cards displaying emotional journey with arrow-connected sentiment icons
 
 - **States**:
   - **Buttons**: Idle (solid teal), Hover (darker teal with subtle lift), Active (pressed with scale), Disabled (muted sand with low opacity), Loading (spinner in button)
@@ -157,11 +165,14 @@ Animations should feel smooth and reassuring like a calm healthcare professional
   - Microphone/MicrophoneSlash: Real-time voice input control (active/inactive states) and voice activity detection indicator
   - SpeakerHigh/SpeakerSlash: Voice output control (enabled/disabled states)
   - Calendar: Appointment booking
+  - CalendarBlank: Date indicators in analytics
   - ClockCounterClockwise: Call history
-  - ChartLine: Analytics
+  - Clock: Duration and time indicators
+  - ChartLine: Analytics overview
+  - ChartLineUp: Sentiment analytics dashboard
   - Hospital: Healthcare routing
   - Warning: Emergency/triage alerts
-  - ArrowRight/CaretRight: Routing flow
+  - ArrowRight/CaretRight: Routing flow and emotional journey progression
   - User/UserCircle: Caller identification
   - CheckCircle: Completed actions
   - Brain: Sentiment analysis and AI insights
