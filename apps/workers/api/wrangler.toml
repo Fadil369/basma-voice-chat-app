@@ -57,3 +57,23 @@ id = "your-sessions-kv-dev-id"
 binding = "RATE_LIMIT"
 id = "your-rate-limit-kv-dev-id"
 
+# Route bindings for Cloudflare
+# Production routes - API endpoints
+[[env.production.routes]]
+pattern = "api.bsma.elfadil.com/*"
+zone_id = "your-cloudflare-zone-id"
+
+# Voice streaming route
+[[env.production.routes]]
+pattern = "voice.bsma.elfadil.com/*"
+zone_id = "your-cloudflare-zone-id"
+
+# Development/vLLM routes
+[[env.vllm.routes]]
+pattern = "api-dev.bsma.elfadil.com/*"
+zone_id = "your-cloudflare-zone-id"
+
+[[env.vllm.routes]]
+pattern = "voice-dev.bsma.elfadil.com/*"
+zone_id = "your-cloudflare-zone-id"
+
