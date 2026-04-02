@@ -1,0 +1,82 @@
+version: '3.8'
+
+services:
+  # vLLM API Server - OpenAI-compatible endpoint
+  vllm:
+    image: vllm/vllm-openai:${VLLM_TAG:-latest}
+    container_name: basma-vllm
+    ports:
+      - "8000:8000"
+    environment:
+      - MODEL_ID=${VLLM_MODEL:-meta-llama/Llama-2-7b-chat-hf}
+      - GPU_MEMORY_UTILIZATION=0.9
+      - MAX_MODEL_LEN=4096
+      - TENSOR_PARALLEL_SIZE=${TENSOR_PARALLEL_SIZE:-1}
+      - ENABLE_PREFIX_CACHING=true
+      # Enable for reduced memory usage
+      - QUANTIZATION=${QUANTIZATION:-}
+    volumes:
+      - huggingface_cache:/root/.cache/huggingface
+      - vllm_data:/tmp/vllm
+    # Uncomment for GPU support (requires nvidia-docker)
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: all
+    #           capabilities: [gpu]
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/v1/models"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - basma
+
+  # Optional: Redis for caching
+  redis:
+    image: redis:7-alpine
+    container_name: basma-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - basma
+
+  # Optional: PostgreSQL for vector storage (pgvector)
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: basma-postgres
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-basma}
+      POSTGRES_USER: ${POSTGRES_USER:-basma}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-basma123}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-basma}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - basma
+
+volumes:
+  huggingface_cache:
+  vllm_data:
+  redis_data:
+  postgres_data:
+
+networks:
+  basma:
+    driver: bridge

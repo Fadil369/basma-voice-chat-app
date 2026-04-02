@@ -1,0 +1,59 @@
+name = "basma-api"
+main = "src/index.ts"
+compatibility_date = "2024-06-20"
+
+[env.production]
+name = "basma-api-prod"
+vars = { ENVIRONMENT = "production", ANTHROPIC_PROVIDER = "claude" }
+
+[[env.production.d1_databases]]
+binding = "DB"
+database_name = "basma_production"
+database_id = "your-d1-database-id"
+
+[[env.production.r2_buckets]]
+binding = "R2_STORAGE"
+bucket_name = "basma-storage"
+
+[[env.production.kv_namespaces]]
+binding = "CACHE"
+id = "your-kv-namespace-id"
+
+[[env.production.kv_namespaces]]
+binding = "SESSIONS"
+id = "your-sessions-kv-id"
+
+[[env.production.kv_namespaces]]
+binding = "RATE_LIMIT"
+id = "your-rate-limit-kv-id"
+
+[env.vllm]
+name = "basma-api-vllm"
+vars = { 
+  ENVIRONMENT = "development", 
+  ANTHROPIC_PROVIDER = "vllm",
+  VLLM_BASE_URL = "http://localhost:8000/v1",
+  VLLM_API_KEY = "sk-local"
+}
+
+[[env.vllm.d1_databases]]
+binding = "DB"
+database_name = "basma_development"
+database_id = "your-d1-dev-id"
+
+[[env.vllm.r2_buckets]]
+binding = "R2_STORAGE"
+bucket_name = "basma-storage-dev"
+
+[[env.vllm.kv_namespaces]]
+binding = "CACHE"
+id = "your-kv-namespace-dev-id"
+
+[[env.vllm.kv_namespaces]]
+binding = "SESSIONS"
+id = "your-sessions-kv-dev-id"
+
+[[env.vllm.kv_namespaces]]
+binding = "RATE_LIMIT"
+id = "your-rate-limit-kv-dev-id"
+

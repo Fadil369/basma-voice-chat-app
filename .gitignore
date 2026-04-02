@@ -1,0 +1,39 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Testing
+coverage/
+
+# Production
+build/
+dist/
+.next/
+*.wasm
+
+# Misc
+.DS_Store
+*.pem
+.env
+.env.local
+.env.*.local
+*.log
+pnpm-debug.log*
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Wrangler
+.wrangler/
+.wrangler-env
+
+# Cloudflare
+wrangler.toml.local
+
+# Docker
+.dockerignore

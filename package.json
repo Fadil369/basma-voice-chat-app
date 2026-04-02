@@ -1,0 +1,45 @@
+{
+  "name": "basma",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "apps/workers/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "deploy": "turbo run deploy",
+    "db:migrate": "wrangler d1 execute basma_production --file=./infrastructure/schema.sql",
+    "db:seed": "tsx infrastructure/seed.ts",
+    "vllm:setup": "bash scripts/setup-vllm.sh",
+    "vllm:start": "docker-compose -f docker-compose.vllm.yml up -d",
+    "vllm:stop": "docker-compose -f docker-compose.vllm.yml down",
+    "vllm:logs": "docker-compose -f docker-compose.vllm.yml logs -f vllm",
+    "vllm:status": "curl -s http://localhost:8000/v1/models | jq .",
+    "vllm:test": "curl -X POST http://localhost:8000/v1/chat/completions -H 'Content-Type: application/json' -d '{\"model\":\"local-model\",\"messages\":[{\"role\":\"user\",\"content\":\"مرحبا\"}],\"max_tokens\":50}'"
+  },
+  "devDependencies": {
+    "tsx": "^4.7.0",
+    "turbo": "^1.11.2",
+    "typescript": "^5.3.3",
+    "wrangler": "^4.61.1"
+  },
+  "dependencies": {
+    "@cloudflare/puppeteer": "^1.0.6",
+    "@lmstudio/sdk": "^1.5.0",
+    "@notionhq/client": "^5.9.0",
+    "@openrouter/sdk": "^0.8.0",
+    "@stripe/stripe-js": "^8.11.0",
+    "arduino-iot-js": "^0.9.7",
+    "bash-language-server": "^5.6.0",
+    "playwright": "^1.58.2",
+    "puppeteer-core": "^24.37.2",
+    "stripe": "^20.4.1",
+    "xlsx": "^0.18.5",
+    "yaml-language-server": "^1.21.0",
+    "zod": "^4.3.6",
+    "zod-to-json-schema": "^3.25.1"
+  }
+}
